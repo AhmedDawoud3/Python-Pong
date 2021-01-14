@@ -8,25 +8,38 @@ WINDOWS_HEIGHT = 720
 
 pygame.init()
 font = pygame.font.Font('font.TTF', 25)
-windowSurface = pygame.display.set_mode((WINDOWS_WIDTH, WINDOWS_HEIGHT))
-# windowSurface = pygame.display.set_mode((500, 400), 0, 32)
-pygame.display.set_caption('Hello world!')
 
-# set up the text
-text = font.render('Hello world!', True, (255, 255, 255), 0)
-textRect = text.get_rect()
-textRect.centerx = windowSurface.get_rect().centerx
-textRect.centery = windowSurface.get_rect().centery
 
-# draw the text onto the surface
-windowSurface.blit(text, textRect)
+class Pong():
+    def __init__(self):
+        windowSurface = pygame.display.set_mode(
+            (WINDOWS_WIDTH, WINDOWS_HEIGHT))
+        pygame.display.set_caption('Pong')
 
-# draw the window onto the screen
-pygame.display.update()
+        text = font.render('Hello Pong!', True, (255, 255, 255), 0)
+        textRect = text.get_rect()
+        textRect.centerx = windowSurface.get_rect().centerx
+        textRect.centery = windowSurface.get_rect().centery
 
-# run the game loop
+        windowSurface.blit(text, textRect)
+
+        pygame.display.update()
+
+    def play(self):
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                pygame.quit()
+                quit()
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_ESCAPE:
+                    exit()
+
+
+game = Pong()
 while True:
-    for event in pygame.event.get():
-        if event.type == QUIT:
-            pygame.quit()
-            sys.exit()
+    play = game.play()
+
+    # for event in pygame.event.get():
+    #     if event.type == QUIT:
+pygame.quit()
+# sys.exit()
