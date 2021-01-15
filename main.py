@@ -110,6 +110,19 @@ class Pong():
                     pressed_UP = False
                 elif event.key == pygame.K_DOWN:
                     pressed_DOWN = False
+        if ball.collide(player1):
+            ball.dx = -ball.dx * random.choice([0.95, 1.05])
+            ball.dy = ball.dy * random.choice([0.95, 1.05])
+
+        if ball.collide(player2):
+            ball.dx = - ball.dx * random.choice([0.95, 1.05])
+            ball.dy = ball.dy * random.choice([0.95, 1.05])
+
+        if ball.y >= WINDOWS_HEIGHT - 12:
+            ball.dy = -ball.dy
+
+        if ball.y <= 0:
+            ball.dy = - ball.dy
 
         if pressed_S:
             player1.move(dt, "down")

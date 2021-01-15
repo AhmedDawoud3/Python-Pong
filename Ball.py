@@ -16,8 +16,16 @@ class Ball():
         self.width = width
         self.height = height
 
-        self.dx = random.choice([-80, 80])
+        self.dx = random.choice([-70, 70])
         self.dy = random.randint(-150, 150)
+
+    def collide(self, box):
+        if self.x > box.x + box.width or self.x + self.width < box.x:
+            return False
+        if self.y > box.y + box.height or self.y + self.height < box.y:
+            return False
+
+        return True
 
     def reset(self):
         global WINDOWS_WIDTH
@@ -25,7 +33,7 @@ class Ball():
         self.x = WINDOWS_WIDTH / 2 - 6
         self.y = WINDOWS_HEIGHT / 2 - 6
 
-        self.dx = random.choice([-80, 80])
+        self.dx = random.choice([-70, 70])
         self.dy = random.randint(-150, 150)
 
     def update(self, dt):
