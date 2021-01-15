@@ -2,7 +2,7 @@ import pygame
 import random
 import sys
 from pygame.locals import *
-
+import math
 WINDOWS_WIDTH = 1280
 WINDOWS_HEIGHT = 720
 
@@ -25,6 +25,13 @@ pressed_W = False
 pressed_UP = False
 pressed_DOWN = False
 
+ballX = WINDOWS_WIDTH / 2 - 6
+ballY = WINDOWS_HEIGHT / 2 - 6
+
+PADDLE_SIZEX = 15
+PADDLE_SIZEY = 80
+
+
 clock = pygame.time.Clock()
 
 
@@ -36,15 +43,15 @@ class Pong():
 
         # Player 1
         Player1 = pygame.draw.rect(windowSurface, (255, 255, 255),
-                                   pygame.Rect(15, player1Y, 15, 80))
+                                   pygame.Rect(15, player1Y, PADDLE_SIZEX, PADDLE_SIZEY))
 
         # Player 2
         pygame.draw.rect(windowSurface, (255, 255, 255),
-                         pygame.Rect(1250, player2Y, 15, 80))
+                         pygame.Rect(1250, player2Y, PADDLE_SIZEX, PADDLE_SIZEY))
 
         # Ball
         pygame.draw.rect(windowSurface, (255, 255, 255),
-                         pygame.Rect(WINDOWS_WIDTH/2 - 3.5, WINDOWS_HEIGHT / 2 - 3.5, 12, 12))
+                         pygame.Rect(ballX, ballY, 12, 12))
 
         text = smallFont.render('Hello Pong!', True, (255, 255, 255), 0)
         textRect = text.get_rect()
@@ -108,13 +115,15 @@ class Pong():
                     pressed_DOWN = False
 
         if pressed_S:
-            player1Y += PADDLE_SPEED*dt
+            player1Y = min(WINDOWS_HEIGHT - PADDLE_SIZEY,
+                           player1Y + PADDLE_SPEED*dt)
         elif pressed_W:
-            player1Y -= PADDLE_SPEED*dt
+            player1Y = max(0, player1Y - PADDLE_SPEED*dt)
         if pressed_DOWN:
-            player2Y += PADDLE_SPEED*dt
+            player2Y = min(WINDOWS_HEIGHT - PADDLE_SIZEY,
+                           player2Y + PADDLE_SPEED*dt)
         elif pressed_UP:
-            player2Y -= PADDLE_SPEED*dt
+            player2Y = max(0, player2Y - PADDLE_SPEED*dt)
 
 
 while True:
