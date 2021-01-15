@@ -1,10 +1,8 @@
 # Print Text with [x, y] (NORMAL AXIS) not "pygame axis"
 import pygame
-import random
 import sys
 from pygame.locals import *
 import math
-import random
 from Ball import Ball
 from Paddle import Paddle
 

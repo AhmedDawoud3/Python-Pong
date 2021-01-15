@@ -3,7 +3,6 @@ import random
 import sys
 from pygame.locals import *
 import math
-import random
 from Ball import Ball
 from Paddle import Paddle
 from Text import printTxt
@@ -63,7 +62,6 @@ class Pong():
         elif gameState == 'play':
             printTxt(windowSurface, "Play State", 0, 200)
 
-        # Player 1
         player1.render(windowSurface)
         player2.render(windowSurface)
         Ball.render(ball, windowSurface)
@@ -80,7 +78,7 @@ class Pong():
 
         global gameState
         global dt
-        print(dt)
+        # print(dt)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()

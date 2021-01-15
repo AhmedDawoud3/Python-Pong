@@ -16,8 +16,8 @@ class Ball():
         self.width = width
         self.height = height
 
-        self.dx = random.choice([-250, 250])
-        self.dy = random.randint(-250, 250)
+        self.dx = random.choice([-80, 80])
+        self.dy = random.randint(-150, 150)
 
     def reset(self):
         global WINDOWS_WIDTH
@@ -25,7 +25,7 @@ class Ball():
         self.x = WINDOWS_WIDTH / 2 - 6
         self.y = WINDOWS_HEIGHT / 2 - 6
 
-        self.dx = random.choice([-150, 150])
+        self.dx = random.choice([-80, 80])
         self.dy = random.randint(-150, 150)
 
     def update(self, dt):
