@@ -39,9 +39,12 @@ PADDLE_SIZEY = 80
 
 clock = pygame.time.Clock()
 
+gameState = 'start'
+
 
 class Pong():
     def __init__(self):
+        global gameState
         windowSurface = pygame.display.set_mode(
             (WINDOWS_WIDTH, WINDOWS_HEIGHT))
         pygame.display.set_caption('Pong')
@@ -69,6 +72,19 @@ class Pong():
         textRect.centery = windowSurface.get_rect().centery - 120
 
         windowSurface.blit(text, textRect)
+
+        if gameState == 'start':
+            text = smallFont.render("Start State", True, (255, 255, 255), 1)
+            textRect = text.get_rect()
+            textRect.centerx = windowSurface.get_rect().centerx
+            textRect.centery = windowSurface.get_rect().centery - 200
+            windowSurface.blit(text, textRect)
+        elif gameState == 'play':
+            text = smallFont.render("Play State", True, (255, 255, 255), 1)
+            textRect = text.get_rect()
+            textRect.centerx = windowSurface.get_rect().centerx
+            textRect.centery = windowSurface.get_rect().centery - 200
+            windowSurface.blit(text, textRect)
 
         # Player 1
         Player1 = pygame.draw.rect(windowSurface, (255, 255, 255),
@@ -98,6 +114,7 @@ class Pong():
         global ballDX
         global ballDY
 
+        global gameState
         dt = 1/clock.tick(30)
         # print(dt)
         for event in pygame.event.get():
@@ -107,6 +124,16 @@ class Pong():
             elif event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_ESCAPE:
                     exit()
+                elif event.key == pygame.K_RETURN:
+                    if gameState == 'start':
+                        gameState = 'play'
+                    elif gameState == 'play':
+                        gameState = "start"
+                        ballX = WINDOWS_WIDTH / 2 - 6
+                        ballY = WINDOWS_HEIGHT / 2 - 6
+
+                        ballDX = random.choice([-350, 350])
+                        ballDY = random.randint(-250, 250)
                 elif event.key == pygame.K_s:
                     pressed_S = True
                 elif event.key == pygame.K_w:
@@ -136,8 +163,9 @@ class Pong():
         elif pressed_UP:
             player2Y = max(0, player2Y - PADDLE_SPEED*dt)
 
-        ballX = ballX + ballDX * dt
-        ballY = ballY + ballDY * dt
+        if gameState == 'play':
+            ballX = ballX + ballDX * dt
+            ballY = ballY + ballDY * dt
 
 
 while True:
