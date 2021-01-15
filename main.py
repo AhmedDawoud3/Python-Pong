@@ -7,7 +7,7 @@ WINDOWS_WIDTH = 1280
 WINDOWS_HEIGHT = 720
 
 pygame.init()
-font = pygame.font.Font('font.TTF', 25)
+font = pygame.font.Font('font.TTF', 27)
 
 
 class Pong():
@@ -19,7 +19,19 @@ class Pong():
         text = font.render('Hello Pong!', True, (255, 255, 255), 0)
         textRect = text.get_rect()
         textRect.centerx = windowSurface.get_rect().centerx
-        textRect.centery = windowSurface.get_rect().centery
+        textRect.centery = windowSurface.get_rect().centery - 250
+
+        # Player 1
+        pygame.draw.rect(windowSurface, (255, 255, 255),
+                         pygame.Rect(15, 60, 15, 80))
+
+        # Player 2
+        pygame.draw.rect(windowSurface, (255, 255, 255),
+                         pygame.Rect(1250, 600, 15, 80))
+
+        # Ball
+        pygame.draw.rect(windowSurface, (255, 255, 255),
+                         pygame.Rect(WINDOWS_WIDTH/2 - 3.5, WINDOWS_HEIGHT / 2 - 3.5, 12, 12))
 
         windowSurface.blit(text, textRect)
 
