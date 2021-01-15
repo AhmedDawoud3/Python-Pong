@@ -3,6 +3,7 @@ import random
 import sys
 from pygame.locals import *
 import math
+import random
 WINDOWS_WIDTH = 1280
 WINDOWS_HEIGHT = 720
 
@@ -28,6 +29,10 @@ pressed_DOWN = False
 ballX = WINDOWS_WIDTH / 2 - 6
 ballY = WINDOWS_HEIGHT / 2 - 6
 
+ballDX = random.choice([-350, 350])
+ballDY = random.randint(-250, 250)
+
+
 PADDLE_SIZEX = 15
 PADDLE_SIZEY = 80
 
@@ -41,18 +46,7 @@ class Pong():
             (WINDOWS_WIDTH, WINDOWS_HEIGHT))
         pygame.display.set_caption('Pong')
 
-        # Player 1
-        Player1 = pygame.draw.rect(windowSurface, (255, 255, 255),
-                                   pygame.Rect(15, player1Y, PADDLE_SIZEX, PADDLE_SIZEY))
-
-        # Player 2
-        pygame.draw.rect(windowSurface, (255, 255, 255),
-                         pygame.Rect(1250, player2Y, PADDLE_SIZEX, PADDLE_SIZEY))
-
-        # Ball
-        pygame.draw.rect(windowSurface, (255, 255, 255),
-                         pygame.Rect(ballX, ballY, 12, 12))
-
+        # Hello
         text = smallFont.render('Hello Pong!', True, (255, 255, 255), 0)
         textRect = text.get_rect()
         textRect.centerx = windowSurface.get_rect().centerx
@@ -76,6 +70,18 @@ class Pong():
 
         windowSurface.blit(text, textRect)
 
+        # Player 1
+        Player1 = pygame.draw.rect(windowSurface, (255, 255, 255),
+                                   pygame.Rect(15, player1Y, PADDLE_SIZEX, PADDLE_SIZEY))
+
+        # Player 2
+        pygame.draw.rect(windowSurface, (255, 255, 255),
+                         pygame.Rect(1250, player2Y, PADDLE_SIZEX, PADDLE_SIZEY))
+
+        # Ball
+        pygame.draw.rect(windowSurface, (255, 255, 255),
+                         pygame.Rect(ballX, ballY, 12, 12))
+
         pygame.display.update()
 
     def play(self):
@@ -86,6 +92,11 @@ class Pong():
         global pressed_W
         global pressed_UP
         global pressed_DOWN
+
+        global ballX
+        global ballY
+        global ballDX
+        global ballDY
 
         dt = 1/clock.tick(30)
         # print(dt)
@@ -124,6 +135,9 @@ class Pong():
                            player2Y + PADDLE_SPEED*dt)
         elif pressed_UP:
             player2Y = max(0, player2Y - PADDLE_SPEED*dt)
+
+        ballX = ballX + ballDX * dt
+        ballY = ballY + ballDY * dt
 
 
 while True:
