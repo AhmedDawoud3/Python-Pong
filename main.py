@@ -4,10 +4,14 @@ import sys
 from pygame.locals import *
 import math
 import random
+from Ball import Ball
+from Paddle import Paddle
+from Text import printTxt
+
 WINDOWS_WIDTH = 1280
 WINDOWS_HEIGHT = 720
 
-PADDLE_SPEED = 800
+PADDLE_SPEED = 120
 
 pygame.init()
 smallFont = pygame.font.Font('font.TTF', 27)
@@ -17,106 +21,66 @@ scoreFont = pygame.font.Font('font.TTF', 108)
 player1Score = 0
 player2Score = 0
 
-player1Y = 30
-player2Y = WINDOWS_HEIGHT - 120
-
 pressed_S = False
 pressed_W = False
 
 pressed_UP = False
 pressed_DOWN = False
 
-ballX = WINDOWS_WIDTH / 2 - 6
-ballY = WINDOWS_HEIGHT / 2 - 6
-
-ballDX = random.choice([-350, 350])
-ballDY = random.randint(-250, 250)
-
-
-PADDLE_SIZEX = 15
-PADDLE_SIZEY = 80
-
 
 clock = pygame.time.Clock()
 
 gameState = 'start'
 
+dt = 1/clock.tick(30)
+
+ball = Ball(WINDOWS_WIDTH / 2 - 6, WINDOWS_HEIGHT / 2 - 6,
+            12, 12)
+
+player1 = Paddle(15, 30, 15, 80)
+
+player2 = Paddle(1250, WINDOWS_HEIGHT - 120, 15, 80)
+
 
 class Pong():
     def __init__(self):
-        global gameState
+
+        global dt
         windowSurface = pygame.display.set_mode(
             (WINDOWS_WIDTH, WINDOWS_HEIGHT))
-        pygame.display.set_caption('Pong')
 
-        # Hello
-        text = smallFont.render('Hello Pong!', True, (255, 255, 255), 0)
-        textRect = text.get_rect()
-        textRect.centerx = windowSurface.get_rect().centerx
-        textRect.centery = windowSurface.get_rect().centery - 250
-
-        windowSurface.blit(text, textRect)
+        # Hello Pong !
+        printTxt(windowSurface, "Hello Pong!", 0, 250)
 
         # Player One Score
-        text = scoreFont.render(str(player1Score), True, (255, 255, 255), 0)
-        textRect = text.get_rect()
-        textRect.centerx = windowSurface.get_rect().centerx - 120
-        textRect.centery = windowSurface.get_rect().centery - 120
-
-        windowSurface.blit(text, textRect)
+        printTxt(windowSurface, player1Score, 120, 120, "scoreFont")
 
         # Player Two Score
-        text = scoreFont.render(str(player2Score), True, (255, 255, 255), 0)
-        textRect = text.get_rect()
-        textRect.centerx = windowSurface.get_rect().centerx + 120
-        textRect.centery = windowSurface.get_rect().centery - 120
-
-        windowSurface.blit(text, textRect)
+        printTxt(windowSurface, player2Score, -120, 120, "scoreFont")
 
         if gameState == 'start':
-            text = smallFont.render("Start State", True, (255, 255, 255), 1)
-            textRect = text.get_rect()
-            textRect.centerx = windowSurface.get_rect().centerx
-            textRect.centery = windowSurface.get_rect().centery - 200
-            windowSurface.blit(text, textRect)
+            printTxt(windowSurface, "Start State", 0, 200)
         elif gameState == 'play':
-            text = smallFont.render("Play State", True, (255, 255, 255), 1)
-            textRect = text.get_rect()
-            textRect.centerx = windowSurface.get_rect().centerx
-            textRect.centery = windowSurface.get_rect().centery - 200
-            windowSurface.blit(text, textRect)
+            printTxt(windowSurface, "Play State", 0, 200)
 
         # Player 1
-        Player1 = pygame.draw.rect(windowSurface, (255, 255, 255),
-                                   pygame.Rect(15, player1Y, PADDLE_SIZEX, PADDLE_SIZEY))
-
-        # Player 2
-        pygame.draw.rect(windowSurface, (255, 255, 255),
-                         pygame.Rect(1250, player2Y, PADDLE_SIZEX, PADDLE_SIZEY))
-
-        # Ball
-        pygame.draw.rect(windowSurface, (255, 255, 255),
-                         pygame.Rect(ballX, ballY, 12, 12))
+        player1.render(windowSurface)
+        player2.render(windowSurface)
+        Ball.render(ball, windowSurface)
 
         pygame.display.update()
 
     def play(self):
-        global player1Y
-        global player2Y
+        global ball
 
         global pressed_S
         global pressed_W
         global pressed_UP
         global pressed_DOWN
 
-        global ballX
-        global ballY
-        global ballDX
-        global ballDY
-
         global gameState
-        dt = 1/clock.tick(30)
-        # print(dt)
+        global dt
+        print(dt)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
@@ -129,11 +93,8 @@ class Pong():
                         gameState = 'play'
                     elif gameState == 'play':
                         gameState = "start"
-                        ballX = WINDOWS_WIDTH / 2 - 6
-                        ballY = WINDOWS_HEIGHT / 2 - 6
+                        ball.reset()
 
-                        ballDX = random.choice([-350, 350])
-                        ballDY = random.randint(-250, 250)
                 elif event.key == pygame.K_s:
                     pressed_S = True
                 elif event.key == pygame.K_w:
@@ -153,26 +114,25 @@ class Pong():
                     pressed_DOWN = False
 
         if pressed_S:
-            player1Y = min(WINDOWS_HEIGHT - PADDLE_SIZEY,
-                           player1Y + PADDLE_SPEED*dt)
+            player1.move(dt, "down")
+
         elif pressed_W:
-            player1Y = max(0, player1Y - PADDLE_SPEED*dt)
+            player1.move(dt, "up")
         if pressed_DOWN:
-            player2Y = min(WINDOWS_HEIGHT - PADDLE_SIZEY,
-                           player2Y + PADDLE_SPEED*dt)
+            player2.move(dt, "down")
         elif pressed_UP:
-            player2Y = max(0, player2Y - PADDLE_SPEED*dt)
+            player2.move(dt, "up")
 
         if gameState == 'play':
-            ballX = ballX + ballDX * dt
-            ballY = ballY + ballDY * dt
+            ball.update(dt)
+
+        player1.update(dt)
+        player2.update(dt)
 
 
 while True:
     game = Pong()
     play = game.play()
 
-    # for event in pygame.event.get():
-    #     if event.type == QUIT:
+
 pygame.quit()
-# sys.exit()
